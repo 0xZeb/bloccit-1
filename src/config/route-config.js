@@ -3,4 +3,4 @@ module.exports = {
         const staticRoutes = require("../routes/static");
         app.use(staticRoutes);
     }
-}
+};

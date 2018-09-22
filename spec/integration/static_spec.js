@@ -1,7 +1,6 @@
 const request = require("request");
 const server = require("../../src/server");
 const base = "http://localhost:3000/";
-const marco = 'http://localhost:3000/marco';
 
 describe("routes : static", () => {
 
@@ -21,21 +20,21 @@ describe("routes : static", () => {
             });
         });
 
-        describe("GET /marco", () => {
+    });
 
-            //#2
-            it("should return status code 200 and have \'polo\' in the body", (done) => {
+    describe("GET /about", () => {
 
-                //#3
-                request.get(marco, (err, res, body) => {
-                    expect(res.statusCode).toBe(200);
-                    expect(body).toBe("polo");
+        //#2
+        it("should return status code 200 and have About Us string in the body", (done) => {
 
-                    //#4
-                    done();
-                });
+            //#3
+            request.get(base, (err, res, body) => {
+                expect(res.statusCode).toBe(200);
+                expect(body).toContain("About Us");
+
+                //#4
+                done();
             });
-
         });
 
     });
