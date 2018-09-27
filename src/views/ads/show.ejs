@@ -1,0 +1,31 @@
+<html>
+
+<head>
+    <% include ../static/partials/head.ejs %>
+</head>
+
+<body>
+    <% include ../static/partials/navbar.ejs %>
+
+    <main class="container">
+        <p>Ad goes here</p>
+        
+        <h1>
+            <%= ad.title %>
+        </h1>
+        <p>
+            <%= ad.description %>
+        </p>
+
+        <a href="/ads/<%= ad.id %>/edit" class="btn btn-warning">Edit</a>
+        <form style="display:initial" action="/ads/<%= ad.id %>/destroy" method="post">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+        
+    </main>
+
+    <% include ../static/partials/baseScripts.ejs %>
+
+</body>
+
+</html>
