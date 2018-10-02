@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
 
     Post.belongsTo(models.Topics, {
-      foreignKey: "topidId",
+      foreignKey: "topicId",
       onDelete: "CASCADE"
     });
   };
