@@ -1,4 +1,5 @@
 const Topics = require("./models").Topics;
+
 const Post = require("./models").Post;
 
 module.exports = {
@@ -31,6 +32,7 @@ module.exports = {
 
    getTopic(id, callback) {
        return Topics.findById(id)
+       
        return Topics.findById(id, {
 
                include: [{
