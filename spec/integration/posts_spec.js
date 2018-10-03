@@ -3,7 +3,7 @@ const server = require("../../src/server");
 const base = "http://localhost:3000/topics";
 
 const sequelize = require("../../src/db/models/index").sequelize;
-const Topics = require("../../src/db/models").Topic;
+const Topics = require("../../src/db/models").Topics;
 const Post = require("../../src/db/models").Post;
 
 describe("routes : posts", () => {
@@ -17,7 +17,7 @@ describe("routes : posts", () => {
         }).then((res) => {
 
             //#1
-            Topic.create({
+            Topics.create({
                     title: "Winter Games",
                     description: "Post your Winter Games stories."
                 })
@@ -38,6 +38,18 @@ describe("routes : posts", () => {
                             done();
                         });
                 });
+        });
+
+        describe("GET /topics/:topicId/posts/new", () => {
+
+            it("should render a new post form", (done) => {
+                request.get(`${base}/${topics.id}/posts/new`, (err, res, body) => {
+                    expect(err).toBeNull();
+                    expect(body).toContain("New Post");
+                    done();
+                });
+            });
+
         });
 
     });
