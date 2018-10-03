@@ -31,8 +31,6 @@ module.exports = {
     },
 
     getTopic(id, callback) {
-       return Topics.findById(id)
-
         return Topics.findById(id, {
 
             include: [{
