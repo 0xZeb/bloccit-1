@@ -10,15 +10,14 @@
 
     <main class="container">
         <h1>New Flair</h1>
-        <!-- #1 -->
-        <form action="/topics/<%= topicId %>/posts/<%= postId %>/create" method="flair">
+        <form action="/posts/<%= postId %>/flairs/create" method="post">
             <div class="form-group">
-                <label for="title">Flair name</label>
-                <input type="text" class="form-control" name="name" aria-describedby="nameHelp" placeholder="Enter Flair Name">
+                <label for="title">Flair title</label>
+                <input type="text" class="form-control" name="title" aria-describedby="nameHelp" placeholder="Enter Flair title">
             </div>
             <div class="form-group">
-                <label for="color">Flair color</label>
-                <textarea rows="4" class="form-control" name="color" placeholder="Enter Flair color"></textarea>
+                <label for="body">Flair body</label>
+                <textarea rows="1" class="form-control" name="body" placeholder="Enter Flair text"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

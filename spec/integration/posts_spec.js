@@ -16,7 +16,6 @@ describe("routes : posts", () => {
             force: true
         }).then((res) => {
 
-            //#1
             Topics.create({
                     title: "Winter Games",
                     description: "Post your Winter Games stories."
