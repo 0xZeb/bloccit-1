@@ -2,7 +2,8 @@ const request = require("request");
 const server = require("../../src/server");
 const base = "http://localhost:3000/topics/";
 const sequelize = require("../../src/db/models/index").sequelize;
-const Topics = require("../../src/db/models").Topic;
+
+const Topics = require("../../src/db/models").Topics;
 const User = require("../../src/db/models").User;
 
 describe("routes: topics", () => {
@@ -66,7 +67,7 @@ describe("routes: topics", () => {
                     done();
                 });
             });
-        }); //here
+        });
         describe("POST /topics/create", () => {
             const options = {
                 url: `${base}create`,
@@ -80,7 +81,8 @@ describe("routes: topics", () => {
                     (err, res, body) => {
                         Topics.findOne({
                                 where: {
-                                    title: "blink-182 songs"
+                                    title: "blink-182 songs",
+                                    description: "wWhat's your favorite blink-182 song?"
                                 }
                             })
                             .then((topic) => {
@@ -108,7 +110,8 @@ describe("routes: topics", () => {
                     (err, res, body) => {
                         Topics.findOne({
                                 where: {
-                                    title: "a"
+                                    title: "a",
+                                    description: "b"
                                 }
                             })
                             .then((topic) => {
@@ -122,7 +125,7 @@ describe("routes: topics", () => {
                     }
                 );
             });
-        }); //here
+        });
         describe("GET /topics/:id", () => {
             it("should render a view with the selected topic", (done) => {
                 request.get(`${base}${this.topic.id}`, (err, res, body) => {
@@ -148,7 +151,7 @@ describe("routes: topics", () => {
                         });
                     });
             });
-        }); //here //here
+        });
         describe("GET /topics/:id/edit", () => {
             it("should render a view with an edit topic form", (done) => {
                 request.get(`${base}${this.topic.id}/edit`, (err, res, body) => {
@@ -158,7 +161,7 @@ describe("routes: topics", () => {
                     done();
                 });
             });
-        }); //here
+        });
         describe("POST /topics/:id/update", () => {
             it("should update the topic with the given values", (done) => {
                 const options = {
@@ -182,7 +185,7 @@ describe("routes: topics", () => {
                             });
                     });
             });
-        }); //here
+        });
     });
     describe("member user performing CRUD actions for Topics", () => {
         beforeEach((done) => {
@@ -216,7 +219,7 @@ describe("routes: topics", () => {
                     done();
                 });
             });
-        }); //here
+        });
         describe("POST /topics/create", () => {
             const options = {
                 url: `${base}create`,
@@ -258,7 +261,8 @@ describe("routes: topics", () => {
                     (err, res, body) => {
                         Topics.findOne({
                                 where: {
-                                    title: "a"
+                                    title: "a",
+                                    description: "b"
                                 }
                             })
                             .then((topic) => {
@@ -272,7 +276,7 @@ describe("routes: topics", () => {
                     }
                 );
             });
-        }); //here //here
+        }); 
         describe("GET /topics/:id", () => {
             it("should render a view with the selected topic", (done) => {
                 request.get(`${base}${this.topic.id}`, (err, res, body) => {
@@ -298,7 +302,7 @@ describe("routes: topics", () => {
                         });
                     });
             });
-        }); //here
+        });
         describe("GET /topics/:id/edit", () => {
             it("should render a view with an edit topic form", (done) => {
                 request.get(`${base}${this.topic.id}/edit`, (err, res, body) => {
@@ -308,7 +312,7 @@ describe("routes: topics", () => {
                     done();
                 });
             });
-        }); //here
+        });
         describe("POST /topics/:id/update", () => {
             it("should update the topic with the given values", (done) => {
                 const options = {
@@ -332,6 +336,6 @@ describe("routes: topics", () => {
                             });
                     });
             });
-        }); //here
+        });
     });
 });
