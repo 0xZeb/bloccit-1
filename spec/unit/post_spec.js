@@ -1,55 +1,65 @@
 const sequelize = require("../../src/db/models/index").sequelize;
 const Topics = require("../../src/db/models").Topics;
 const Post = require("../../src/db/models").Post;
+const User = require("../../src/db/models").User;
 
 describe("Post", () => {
 
     beforeEach((done) => {
-
         this.topic;
         this.post;
-        sequelize.sync({force: true}).then((res) => {
+        this.user;
 
-            Topics.create({
-                title: "Expeditions to Alpha Centauri",
-                description: "A compilation of reports from recent visits to the star system."
-            })
-            .then((topic) => {
-                this.topic = topic;
+        sequelize.sync({
+            force: true
+        }).then((res) => {
 
-                Post.create({
-                    title: "My first visit to Proxima Centauri b",
-                    body: "I saw some rocks.",
-
-                    topicId: this.topic.id
+            User.create({
+                    email: "starman@tesla.com",
+                    password: "Trekkie4lyfe"
                 })
-                .then((post) => {
-                    this.post = post;
-                    done();
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-                done();
-            });
+                .then((user) => {
+                    this.user = user; //store the user
 
+                    Topics.create({
+                            title: "Expeditions to Alpha Centauri",
+                            description: "A compilation of reports from recent visits to the star system.",
+                            posts: [{
+                                title: "My first visit to Proxima Centauri b",
+                                body: "I saw some rocks.",
+                                userId: this.user.id
+                            }]
+                        }, {
+                            include: {
+                                model: Post,
+                                as: "posts"
+                            }
+                        })
+                        .then((topic) => {
+                            this.topic = topic; //store the topic
+                            this.post = topic.posts[0]; //store the post
+                            done();
+                        })
+                })
         });
     });
 
     describe("#create()", () => {
 
-        it("should create a post object with a title, body, and assigned topic", (done) => {
+        it("should create a post object with a title, body, and assigned topic and user", (done) => {
             //#1
             Post.create({
                 title: "Pros of Cryosleep during the long journey",
                 body: "1. Not having to answer the 'are we there yet?' question.",
-                topicId: this.topic.id
+                topicId: this.topic.id,
+                userId: this.user.id
             })
                 .then((post) => {
 
                     //#2
                     expect(post.title).toBe("Pros of Cryosleep during the long journey");
                     expect(post.body).toBe("1. Not having to answer the 'are we there yet?' question.");
+                    expect(post.userId).toBe(this.user.id);
                     done();
 
                 })
@@ -117,6 +127,44 @@ describe("Post", () => {
             this.post.getTopic()
                 .then((associatedTopic) => {
                     expect(associatedTopic.title).toBe("Expeditions to Alpha Centauri");
+                    done();
+                });
+
+        });
+
+    });
+
+    describe("#setUser()", () => {
+
+        it("should associate a post and a user together", (done) => {
+
+            User.create({
+                    email: "ada@example.com",
+                    password: "password"
+                })
+                .then((newUser) => {
+
+                    expect(this.post.userId).toBe(this.user.id);
+
+                    this.post.setUser(newUser)
+                        .then((post) => {
+
+                            expect(this.post.userId).toBe(newUser.id);
+                            done();
+
+                        });
+                })
+        });
+
+    });
+
+    describe("#getUser()", () => {
+
+        it("should return the associated topic", (done) => {
+
+            this.post.getUser()
+                .then((associatedUser) => {
+                    expect(associatedUser.email).toBe("starman@tesla.com");
                     done();
                 });
 

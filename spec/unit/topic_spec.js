@@ -1,51 +1,53 @@
 const sequelize = require("../../src/db/models/index").sequelize;
 const Topics = require("../../src/db/models").Topics;
 const Post = require("../../src/db/models").Post;
+const User = require("../../src/db/models").User;
 
-describe("Topic", () => {
+describe("Topics", () => {
     beforeEach((done) => {
-        //#1
         this.topic;
         this.post;
+        this.user;
         sequelize.sync({
             force: true
         }).then((res) => {
-            //#2
-            Topics.create({
-                    title: "Best David Bowie Songs",
-                    description: "Ruminations on Mr. Bowie's best work."
+            User.create({
+                    email: "starman@tesla.com",
+                    password: "Trekkie4lyfe"
                 })
-                .then((topic) => {
-                    this.topic = topic;
-                    //#3
-                    Post.create({
-                            title: "Let's Dance",
-                            body: "Put on your red shoes and dance the blues.",
-                            //#4
-                            topicId: this.topic.id
+                .then((user) => {
+                    this.user = user;
+                    Topics.create({
+                            title: "Expeditions to Alpha Centauri",
+                            description: "A compilation of reports from recent visits to the star system.",
+                            posts: [{
+                                title: "My first visit to Proxima Centauri b",
+                                body: "I saw some rocks.",
+                                userId: this.user.id
+                            }]
+                        }, {
+                            include: {
+                                model: Post,
+                                as: "posts"
+                            }
                         })
-                        .then((post) => {
-                            this.post = post;
+                        .then((topic) => {
+                            this.topic = topic;
+                            this.post = topic.posts[0];
                             done();
-                        });
+                        })
                 })
-                .catch((err) => {
-                    console.log(err);
-                    done();
-                });
         });
     });
     describe("#create()", () => {
-        it("should create a topics object that is stored in the database", (done) => {
-            //#1
+        it("should create a topic object with a title, description, and store it in database", (done) => {
             Topics.create({
-                    title: "Lazarus",
-                    body: "The one about Bowie's cancer.",
+                    title: "Pros of Cryosleep during the long journey",
+                    description: "1. Not having to answer the 'are we there yet?' question.",
                 })
-                .then((topics) => {
-                    //#2
-                    expect(topics.title).toBe("Lazarus");
-                    expect(topics.description).toBe("The one about Bowie's cancer.");
+                .then((topic) => {
+                    expect(topic.title).toBe("Pros of Cryosleep during the long journey");
+                    expect(topic.description).toBe("1. Not having to answer the 'are we there yet?' question.");
                     done();
                 })
                 .catch((err) => {
@@ -53,27 +55,27 @@ describe("Topic", () => {
                     done();
                 });
         });
+        it("should not create a topic with missing title and description", (done) => {
+            Topics.create({
+                    title: "Pros of Cryosleep during the long journey"
+                })
+                .then((post) => {
+                    done();
+                })
+                .catch((err) => {
+                    expect(err.message).toContain("Topics.description cannot be null");
+                    done();
+                })
+        });
     });
     describe("#getPosts()", () => {
-        it("should create and associate a topic and a post together", (done) => {
-            this.topics.getPosts(newPost)
-                .then((newPost) => {
-                    expect(newPost.topicId).toBe(this.topics.id);
-                });
-        });
-        it("should return an array of post objects associated with topic", (done) => {
-            this.topics.getPosts()
-                .then((postArray) => {
-                    expect(postArray.title).toBe("Best David Bowie Songs");
+        it("should return the posts associated with a given topic", (done) => {
+            this.topic.getPosts()
+                .then((posts) => {
+                    expect(posts[0].title).toContain("My first visit to Proxima Centauri b");
+                    expect(posts[0].body).toContain("I saw some rocks.");
                     done();
                 });
-        });
-        it("should confirm associate post and is returned when method is called", (done) => {
-            this.topics.getPosts().then((posts) => {
-                expect(posts[0].title).toContain("Let's Dance");
-                expect(posts[0].description).toContain("Put on your red shoes and dance the blues.");
-                done();
-            });
         });
     });
 });
