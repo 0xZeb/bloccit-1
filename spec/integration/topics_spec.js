@@ -42,7 +42,6 @@ describe("routes : topics", () => {
         });
     });
 
-
     describe("GET /topics/new", () => {
 
         it("should render a new topic form", (done) => {
@@ -81,6 +80,39 @@ describe("routes : topics", () => {
                         .catch((err) => {
                             console.log(err);
                             done();
+                        });
+                }
+            );
+        });
+
+
+        it("should not create a new topic that fails validations", (done) => {
+            const options = {
+                url: `${base}create`,
+                form: {
+
+                     //#1
+                    title: "a",
+                    body: "b"
+                }
+            };
+
+            request.post(options,
+                (err, res, body) => {
+
+                     //#2
+                    Topics.findOne({
+                             where: {
+                                title: "a",
+                             }
+                        })
+                        .then((topic) => {
+                             expect(topic).toBeNull();
+                             done();
+                        })
+                        .catch((err) => {
+                             console.log(err);
+                             done();
                         });
                 }
             );
