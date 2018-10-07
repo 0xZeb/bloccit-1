@@ -73,5 +73,23 @@ module.exports = {
                     callback("Forbidden");
                 }
             });
+    },
+    hasUpvoteFor(userId, callback) { //implementing hasUpvoteFor method
+        return Vote.findById(userId).then(vote => {
+            if (vote.value === 1) {
+                return callback(true);
+            } else {
+                return callback(false);
+            }
+        });
+    },
+    hasDownvoteFor(userId, callback) { //implementing hasDownvoteFor method
+        return Vote.findById(userId).then(vote => {
+            if (vote.value === -1) {
+                return callback(true);
+            } else {
+                return callback(false);
+            }
+        });
     }
 }
