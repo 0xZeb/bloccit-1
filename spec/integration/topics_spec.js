@@ -38,7 +38,7 @@ describe("routes: topics", () => {
                             url: "http://localhost:3000/auth/fake",
                             form: {
                                 role: user.role,
-                                id: user.id,
+                                userId: user.id,
                                 email: user.email
                             }
                         },
@@ -110,7 +110,8 @@ describe("routes: topics", () => {
                     (err, res, body) => {
                         Topics.findOne({
                                 where: {
-                                    title: "a"
+                                    title: "a",
+                                    description: "b"
                                 }
                             })
                             .then((topic) => {
@@ -191,7 +192,7 @@ describe("routes: topics", () => {
             request.get({
                     url: "http://localhost3000/auth/fake",
                     form: {
-                        role: "member",
+                        role: "member"
                     }
                 },
                 (err, res, body) => {
