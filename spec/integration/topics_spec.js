@@ -38,7 +38,7 @@ describe("routes: topics", () => {
                             url: "http://localhost:3000/auth/fake",
                             form: {
                                 role: user.role,
-                                userId: user.id,
+                                id: user.id,
                                 email: user.email
                             }
                         },
@@ -82,7 +82,7 @@ describe("routes: topics", () => {
                         Topics.findOne({
                                 where: {
                                     title: "blink-182 songs",
-                                    description: "wWhat's your favorite blink-182 song?"
+                                    description: "What's your favorite blink-182 song?"
                                 }
                             })
                             .then((topic) => {
@@ -110,8 +110,7 @@ describe("routes: topics", () => {
                     (err, res, body) => {
                         Topics.findOne({
                                 where: {
-                                    title: "a",
-                                    description: "b"
+                                    title: "a"
                                 }
                             })
                             .then((topic) => {
@@ -192,7 +191,7 @@ describe("routes: topics", () => {
             request.get({
                     url: "http://localhost3000/auth/fake",
                     form: {
-                        role: "member"
+                        role: "member",
                     }
                 },
                 (err, res, body) => {
