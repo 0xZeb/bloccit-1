@@ -34,6 +34,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "userId",
       onDelete: "CASCADE"
     });
+
+    Post.hasMany(models.Comment, {
+      foreignKey: "postId",
+      as: "comments"
+    });
   };
   Post.prototype.isOwner = function() {
     return this.userId === this.foreignKey;

@@ -98,33 +98,6 @@ describe("routes: topics", () => {
                     }
                 );
             });
-            it("should not create a new topic that fails validations", (done) => {
-                const options = {
-                    url: `${base}create`,
-                    form: {
-                        title: "a",
-                        description: "b"
-                    }
-                };
-                request.post(options,
-                    (err, res, body) => {
-                        Topics.findOne({
-                                where: {
-                                    title: "a",
-                                    description: "b"
-                                }
-                            })
-                            .then((topic) => {
-                                expect(topic).toBeNull();
-                                done();
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                                done();
-                            });
-                    }
-                );
-            });
         });
         describe("GET /topics/:id", () => {
             it("should render a view with the selected topic", (done) => {
@@ -240,33 +213,6 @@ describe("routes: topics", () => {
                                 expect(res.statusCode).toBe(303);
                                 expect(topic.title).toBe("blink-182 songs");
                                 expect(topic.description).toBe("What's your favorite blink-182 song?");
-                                done();
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                                done();
-                            });
-                    }
-                );
-            });
-            it("should not create a new topic that fails validations", (done) => {
-                const options = {
-                    url: `${base}create`,
-                    form: {
-                        title: "a",
-                        description: "b"
-                    }
-                };
-                request.post(options,
-                    (err, res, body) => {
-                        Topics.findOne({
-                                where: {
-                                    title: "a",
-                                    description: "b"
-                                }
-                            })
-                            .then((topic) => {
-                                expect(topic).toBeNull();
                                 done();
                             })
                             .catch((err) => {
