@@ -6,28 +6,22 @@
 </head>
 
 <body>
-
     <% include ../static/partials/navbar.ejs %>
 
     <main class="container">
-
         <% include ../static/partials/messages.ejs %>
 
-        <!-- #1 -->
         <h1>
             <%= `${user.email}'s profile` %>
         </h1>
 
         <hr>
 
-        <h2> Latest Posts</h2>
+        <h2>Latest Posts</h2>
 
         <ul class="list-unstyled">
-
-            <!-- #2 -->
-            <% if(posts) { %>
+            <% if (posts) { %>
             <% posts.forEach((post) => { %>
-            <!-- #3 -->
             <li>
                 <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>">
                     <%= post.title %>
@@ -36,17 +30,30 @@
             <% }) %>
             <% } %>
         </ul>
+
         <hr>
 
-        <h2> Latest Comments</h2>
+        <h2>Favorited Posts</h2>
 
         <ul class="list-unstyled">
+            <% if (allFavorites) { %>
+            <% allFavorites.forEach((post) => { %>
+            <li>
+                <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>">
+                    <%= post.title %>
+                </a>
+            </li>
+            <% }) %>
+            <% } %>
+        </ul>
 
-            <!-- #4 -->
-            <% if(comments) { %>
+        <hr>
+
+        <h2>Latest Comments</h2>
+
+        <ul class="list-unstyled">
+            <% if (comments) { %>
             <% comments.forEach((comment) => { %>
-
-            <!-- #5 -->
             <li>
                 <span>Post: </span><a href="/topics/<%= comment.Post.topicId %>/posts/<%= comment.Post.id %>">
                     <%= comment.Post.title %>
@@ -62,7 +69,6 @@
     </main>
 
     <% include ../static/partials/baseScripts.ejs %>
-
 </body>
 
 </html>

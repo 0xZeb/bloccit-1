@@ -1,17 +1,13 @@
 const User = require("./models").User;
-const bcrypt = require("bcryptjs");
 const Post = require("./models").Post;
 const Comment = require("./models").Comment;
+const bcrypt = require("bcryptjs");
 
 module.exports = {
-    // #2
     createUser(newUser, callback) {
-
-        // #3
         const salt = bcrypt.genSaltSync();
         const hashedPassword = bcrypt.hashSync(newUser.password, salt);
 
-        // #4
         return User.create({
                 email: newUser.email,
                 password: hashedPassword
@@ -25,31 +21,55 @@ module.exports = {
     },
 
     getUser(id, callback) {
-        // #1
         let result = {};
+
         User.findById(id)
             .then((user) => {
-                // #2
                 if (!user) {
                     callback(404);
                 } else {
-                    // #3
                     result["user"] = user;
-                    // #4
+
                     Post.scope({
                             method: ["lastFiveFor", id]
                         }).all()
                         .then((posts) => {
-                            // #5
                             result["posts"] = posts;
-                            // #6
+
                             Comment.scope({
                                     method: ["lastFiveFor", id]
                                 }).all()
                                 .then((comments) => {
-                                    // #7
                                     result["comments"] = comments;
-                                    callback(null, result);
+
+                                    User.scope({
+                                            method: ["getFavoritedPosts", id]
+                                        }).all()
+                                        .then((favorites) => {
+                                            let userFavorites = JSON.parse(JSON.stringify(favorites));
+                                            let favoritePostsId = [];
+
+                                            userFavorites[0].favorites.forEach((favorite) => {
+                                                favoritePostsId.push(favorite.postId);
+                                            });
+
+                                            var allFavorites = [];
+                                            Post.findAll()
+                                                .then((allPosts) => {
+                                                    allPosts.forEach((thisPost) => {
+                                                        if (favoritePostsId.includes(thisPost.id)) {
+                                                            allFavorites.push({
+                                                                id: thisPost.id,
+                                                                title: thisPost.title,
+                                                                topicId: thisPost.topicId
+                                                            });
+                                                        }
+                                                    })
+
+                                                    result["allFavorites"] = allFavorites;
+                                                    callback(null, result);
+                                                })
+                                        })
                                 })
                                 .catch((err) => {
                                     callback(err);
@@ -57,6 +77,5 @@ module.exports = {
                         })
                 }
             })
-    }
-
+    },
 }
