@@ -36,10 +36,23 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "userId",
       as: "votes"
     });
-
     User.hasMany(models.Favorite, {
       foreignKey: "userId",
       as: "favorites"
+    });
+    User.addScope("listFavorites", (userId) => {
+      // #2
+      return {
+        where: {
+          userId: userId,
+          model: models.Favorite
+        },
+        // #3
+        limit: 5,
+        order: [
+          ["createdAt", "DESC"]
+        ]
+      }
     });
   };
   User.prototype.isAdmin = function() {

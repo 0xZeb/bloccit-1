@@ -71,8 +71,7 @@ module.exports = {
             } else {
 
                 // #3
-                res.render("users/show", { ...result
-                });
+                res.render("users/show", {...result});
             }
         });
     }

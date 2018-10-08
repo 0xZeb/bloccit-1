@@ -49,14 +49,19 @@ module.exports = {
                                 .then((comments) => {
                                     // #7
                                     result["comments"] = comments;
-                                    callback(null, result);
-                                })
-                                .catch((err) => {
+
+                            Favorite.scope({method: ["showFavorites", id]}).all()
+                                    .then((favorites) => {
+                                        result["favorites"] = favorites;
+                                        callback(null, result);
+                                    })
+                            })
+                            .catch((err) => {
                                     callback(err);
-                                })
-                        })
+                            });
+                        });
                 }
-            })
+        });
     }
 
 }
